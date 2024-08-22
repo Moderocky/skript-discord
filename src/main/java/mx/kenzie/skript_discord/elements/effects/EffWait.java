@@ -40,7 +40,7 @@ import java.io.IOException;
 public class EffWait extends Effect {
 
     static {
-        Skript.registerEffect(Delay.class,
+        Skript.registerEffect(EffWait.class,
             "(wait for|await|expect) %lazy%",
             "wait %timespan% for %lazy%"
         );
@@ -63,7 +63,6 @@ public class EffWait extends Effect {
         this.debug(event, true);
         final long start = Skript.debug() ? System.currentTimeMillis() : 0;
         final TriggerItem next = this.getNext();
-        super.walk(event);
         if (next == null || !Skript.getInstance().isEnabled()) return null;
         Delay.addDelayedEvent(event);
 

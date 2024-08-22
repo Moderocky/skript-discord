@@ -4,6 +4,7 @@ import ch.njol.skript.classes.ClassInfo;
 import ch.njol.skript.classes.EnumClassInfo;
 import ch.njol.skript.classes.Parser;
 import ch.njol.skript.classes.Serializer;
+import ch.njol.skript.lang.ParseContext;
 import ch.njol.skript.registrations.Classes;
 import ch.njol.yggdrasil.Fields;
 import mx.kenzie.argo.Json;
@@ -26,6 +27,16 @@ public class DiscordTypes {
             .since("1.0.0")
             //<editor-fold desc="String stuff" defaultstate="collapsed">
             .parser(new Parser<>() {
+
+                @Override
+                public Bot parse(String s, ParseContext context) {
+                    throw new UnsupportedOperationException();
+                }
+
+                @Override
+                public boolean canParse(ParseContext context) {
+                    return false;
+                }
 
                 @Override
                 public String toString(Bot bot, int flags) {
@@ -84,53 +95,61 @@ public class DiscordTypes {
         Classes.registerClass(new ClassInfo<>(DiscordAPI.class, "discordapi")
             .user("discord apis?")
             .name("Discord API")
-            .description("A live connection to the Discord API, belonging to a bot.")
+            .description("""
+                A live connection to the Discord API, usually belonging to a bot.
+                Discord API connections are unique to a bot, e.g. if you have two bots logged in at once, they will have their own connections.
+                
+                This connection can be fetched from any new Discord data (e.g. a message, a channel) as well as a logged-in bot.
+                Therefore, any (live) discord entity can be used as a Discord API connection in syntax.
+                
+                Note: API connections are not preserved in variables after a restart.""")
+            .examples("""
+                set {server} to the discord server with id "988998880794402856" using {bot}""")
             .since("1.0.0")
         );
         Classes.registerClass(new ClassInfo<>(Payload.class, "payload")
-            .user("payloads?")
-            .name("Payload")
-            .description("A data object that can be sent to/received from Discord.")
-            .since("1.0.0")
-            //<editor-fold desc="String stuff" defaultstate="collapsed">
-            .serializer(new Serializer<>() {
+                .user("payloads?")
+                .name("Payload")
+                .description("A data object that can be sent to/received from Discord.")
+                .since("1.0.0")
+                //<editor-fold desc="String stuff" defaultstate="collapsed">
+                .serializer(new Serializer<>() {
 
-                @Override
-                public Fields serialize(Payload payload) throws NotSerializableException {
-                    final Fields fields = new Fields();
-                    fields.putObject("__type", payload.getClass());
-                    fields.putObject("__data", payload.toJson(null));
-                    return fields;
-                }
+                    @Override
+                    public Fields serialize(Payload payload) throws NotSerializableException {
+                        final Fields fields = new Fields();
+                        fields.putObject("__type", payload.getClass());
+                        fields.putObject("__data", payload.toJson(null));
+                        return fields;
+                    }
 
-                @Override
-                protected Payload deserialize(Fields fields)
-                    throws StreamCorruptedException, NotSerializableException {
-                    final Class<?> type = fields.getObject("__type", Class.class);
-                    final String json = fields.getObject("__data", String.class);
-                    if (type == null || json == null) return super.deserialize(fields);
-                    return (Payload) Json.fromJson(json, type);
-                }
+                    @Override
+                    protected Payload deserialize(Fields fields)
+                        throws StreamCorruptedException, NotSerializableException {
+                        final Class<?> type = fields.getObject("__type", Class.class);
+                        final String json = fields.getObject("__data", String.class);
+                        if (type == null || json == null) return super.deserialize(fields);
+                        return (Payload) Json.fromJson(json, type);
+                    }
 
-                @Override
-                public void deserialize(Payload payload, Fields fields)
-                    throws StreamCorruptedException, NotSerializableException {
-                    final Class<?> type = fields.getObject("__type", Class.class);
-                    final String json = fields.getObject("__data", String.class);
-                    if (json == null) return;
-                    Json.fromJson(json, payload);
-                }
+                    @Override
+                    public void deserialize(Payload payload, Fields fields)
+                        throws StreamCorruptedException, NotSerializableException {
+                        final String json = fields.getObject("__data", String.class);
+                        if (json == null) return;
+                        Json.fromJson(json, payload);
+                    }
 
-                @Override
-                public boolean mustSyncDeserialization() {
-                    return false;
-                }
+                    @Override
+                    public boolean mustSyncDeserialization() {
+                        return false;
+                    }
 
-                @Override
-                protected boolean canBeInstantiated() {
-                    return false;
-                }
-            })
+                    @Override
+                    protected boolean canBeInstantiated() {
+                        return false;
+                    }
+                })
             //</editor-fold>
         );
         Classes.registerClass(new ClassInfo<>(Entity.class, "discordentity")

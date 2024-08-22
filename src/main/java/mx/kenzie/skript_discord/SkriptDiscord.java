@@ -52,7 +52,7 @@ public class SkriptDiscord extends JavaPlugin {
             this.addon.loadClasses("mx.kenzie.skript_discord.elements");
         } catch (IOException e) {
             this.getLogger().severe("An error occurred while trying to enable this addon.");
-            e.printStackTrace();
+            error(e);
             manager.disablePlugin(this);
         }
     }
@@ -83,6 +83,11 @@ public class SkriptDiscord extends JavaPlugin {
     public static void unregisterBot(Bot bot) {
         SkriptDiscord.bots.remove(bot);
         if (bot.isRunning()) bot.close();
+    }
+
+    public static void error(Throwable throwable) {
+        if (throwable == null) return;
+        throwable.printStackTrace();
     }
 
 }

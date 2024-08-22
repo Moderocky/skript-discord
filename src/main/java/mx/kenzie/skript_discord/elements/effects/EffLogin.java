@@ -43,7 +43,7 @@ import org.bukkit.event.Event;
 public class EffLogin extends Effect {
 
     static {
-        Skript.registerEffect(Delay.class,
+        Skript.registerEffect(EffLogin.class,
             "log[ ]in to %bot%"
         );
     }

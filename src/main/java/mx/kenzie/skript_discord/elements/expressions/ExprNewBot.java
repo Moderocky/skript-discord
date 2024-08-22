@@ -1,6 +1,10 @@
 package mx.kenzie.skript_discord.elements.expressions;
 
 import ch.njol.skript.Skript;
+import ch.njol.skript.doc.Description;
+import ch.njol.skript.doc.Examples;
+import ch.njol.skript.doc.Name;
+import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.Literal;
@@ -11,6 +15,18 @@ import mx.kenzie.eris.Bot;
 import mx.kenzie.skript_discord.elements.types.GatewayIntent;
 import org.bukkit.event.Event;
 
+@Name("Create Bot")
+@Description("""
+    Creates a new bot with a token and intents for logging in.
+    The bot object can be stored in a variable, but will need to be 'logged in' again after the server restarts.
+    """)
+@Examples({
+    """
+        set {bot} to a new bot with token {token}
+        log in to {bot}
+        wait for {bot} # wait until the login completes"""
+})
+@Since("1.0.0")
 public class ExprNewBot extends SimpleExpression<Bot> {
 
     static {
