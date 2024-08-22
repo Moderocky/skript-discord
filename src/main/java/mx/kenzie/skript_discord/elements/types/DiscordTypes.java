@@ -1,18 +1,20 @@
 package mx.kenzie.skript_discord.elements.types;
 
-import ch.njol.skript.classes.ClassInfo;
-import ch.njol.skript.classes.EnumClassInfo;
-import ch.njol.skript.classes.Parser;
-import ch.njol.skript.classes.Serializer;
+import ch.njol.skript.classes.*;
 import ch.njol.skript.lang.ParseContext;
 import ch.njol.skript.registrations.Classes;
+import ch.njol.skript.util.StringMode;
 import ch.njol.yggdrasil.Fields;
 import mx.kenzie.argo.Json;
 import mx.kenzie.eris.Bot;
 import mx.kenzie.eris.DiscordAPI;
 import mx.kenzie.eris.api.Lazy;
+import mx.kenzie.eris.api.entity.Thread;
 import mx.kenzie.eris.api.entity.*;
+import mx.kenzie.eris.api.entity.message.Attachment;
+import mx.kenzie.eris.api.entity.message.Component;
 import mx.kenzie.eris.data.Payload;
+import mx.kenzie.skript_discord.utility.Stuff;
 
 import java.io.NotSerializableException;
 import java.io.StreamCorruptedException;
@@ -171,6 +173,107 @@ public class DiscordTypes {
             .since("1.0.0")
         );
 
+        // channel things
+        Classes.registerClass(new ClassInfo<>(Channel.class, "channel")
+            .user("channels?")
+            .name("Channel")
+            .description("A Discord channel (almost always in a server).")
+            .since("1.0.0")
+            .changer(new Changer<>() {
+                @Override
+                public Class<?>[] acceptChange(ChangeMode mode) {
+                    return switch (mode) {
+                        case DELETE -> new Class<?>[0];
+                        case ADD, REMOVE -> new Class<?>[] {User.class, String.class, Number.class};
+                        default -> null;
+                    };
+                }
+
+                @Override
+                public void change(Channel[] what, Object[] delta, ChangeMode mode) {
+                    for (Channel channel : what) {
+                        switch (mode) {
+                            case DELETE -> channel.delete();
+                            case ADD -> {
+                                final Thread thread = channel.getAsThread();
+                                for (Object object : delta) {
+                                    thread.addUser(object);
+                                }
+                            }
+                            case REMOVE -> {
+                                final Thread thread = channel.getAsThread();
+                                for (Object object : delta) {
+                                    thread.removeUser(object);
+                                }
+                            }
+                        }
+                    }
+                }
+            })
+        );
+
+        // message things
+        Classes.registerClass(new ClassInfo<>(Message.class, "message")
+            .user("messages?")
+            .name("Message")
+            .description("""
+                Represents a Discord message, either created to be sent, or a message having been received.""")
+            .since("1.0.0")
+            .changer(new Changer<>() {
+                @Override
+                public Class<?>[] acceptChange(ChangeMode mode) {
+                    return switch (mode) {
+                        case ADD -> new Class[] {String.class, Embed.class, Component.class, Attachment.class};
+                        case DELETE -> new Class[0];
+                        default -> null;
+                    };
+                }
+
+                @Override
+                public void change(Message[] what, Object[] delta, ChangeMode mode) {
+                    switch (mode) {
+                        case ADD -> {
+                            for (Message message : what) {
+                                for (Object object : delta)
+                                    switch (object) {
+                                        case Component component -> message
+                                            .setComponents(Stuff.arrayOf(message.components, component));
+                                        case Embed embed -> message
+                                            .setEmbeds(Stuff.arrayOf(message.embeds, embed));
+                                        case Attachment attachment -> message
+                                            .addAttachment(attachment.filename, attachment.proxy_url);
+                                        default -> message
+                                            .append(Classes.toString(object, StringMode.MESSAGE));
+                                    }
+                            }
+                        }
+                        case DELETE -> {
+                            for (Message message : what) {
+                                if (message.id == null || message.api == null) continue;
+                                message.delete();
+                            }
+                        }
+                    }
+                }
+            })
+        );
+
+        Classes.registerClass(new ClassInfo<>(Embed.class, "embed")
+            .user("embeds?")
+            .name("Embed")
+            .description("Embedded content in a Discord message.")
+            .since("1.0.0")
+        );
+
+        Classes.registerClass(new EnumClassInfo<>(MessageFlag.class, "messageflag", "message flags")
+            .user("message flags?")
+            .name("Message Flags")
+            .description("""
+                Flags representing special data about a message (e.g. whether it was crossposted).
+                Some of these flags (e.g. `ephemeral`) can be used when creating a message.""")
+            .since("1.0.0")
+        );
+
         // basic things
         Classes.registerClass(new ClassInfo<>(User.class, "user")
             .user("users?")
@@ -203,15 +306,6 @@ public class DiscordTypes {
                 The things your bot intends to interact with after logging in.
                 If a gateway intent is not requested, some functionality may be unavailable.
                 Some gateway intents are "privileged" (and require configuration in the Discord portal to access).""")
-            .since("1.0.0")
-        );
-
-        Classes.registerClass(new EnumClassInfo<>(MessageFlag.class, "messageflag", "message flags")
-            .user("message flags?")
-            .name("Message Flags")
-            .description("""
-                Flags representing special data about a message (e.g. whether it was crossposted).
-                Some of these flags (e.g. `ephemeral`) can be used when creating a message.""")
             .since("1.0.0")
         );
 
