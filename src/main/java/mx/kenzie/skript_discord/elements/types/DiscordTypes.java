@@ -92,16 +92,16 @@ public class DiscordTypes {
                 }
             })//</editor-fold>
         );
-        Classes.registerClass(new ClassInfo<>(DiscordAPI.class, "discordapi")
+        Classes.registerClass(new ClassInfo<>(DiscordAPI.class, "discord")
             .user("discord apis?")
             .name("Discord API")
             .description("""
                 A live connection to the Discord API, usually belonging to a bot.
                 Discord API connections are unique to a bot, e.g. if you have two bots logged in at once, they will have their own connections.
-                
+                                
                 This connection can be fetched from any new Discord data (e.g. a message, a channel) as well as a logged-in bot.
                 Therefore, any (live) discord entity can be used as a Discord API connection in syntax.
-                
+                                
                 Note: API connections are not preserved in variables after a restart.""")
             .examples("""
                 set {server} to the discord server with id "988998880794402856" using {bot}""")
@@ -203,6 +203,15 @@ public class DiscordTypes {
                 The things your bot intends to interact with after logging in.
                 If a gateway intent is not requested, some functionality may be unavailable.
                 Some gateway intents are "privileged" (and require configuration in the Discord portal to access).""")
+            .since("1.0.0")
+        );
+
+        Classes.registerClass(new EnumClassInfo<>(MessageFlag.class, "messageflag", "message flags")
+            .user("message flags?")
+            .name("Message Flags")
+            .description("""
+                Flags representing special data about a message (e.g. whether it was crossposted).
+                Some of these flags (e.g. `ephemeral`) can be used when creating a message.""")
             .since("1.0.0")
         );
 

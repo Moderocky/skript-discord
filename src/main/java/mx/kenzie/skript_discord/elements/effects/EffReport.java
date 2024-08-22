@@ -48,6 +48,8 @@ public class EffReport extends Effect {
     protected void execute(Event event) {
         final Lazy lazy = this.lazy.getSingle(event);
         if (lazy == null) return;
+        System.out.println(lazy.toJson("\t")); // todo
+        System.out.println(lazy.error()); // todo
         SkriptDiscord.error(lazy.error());
     }
 

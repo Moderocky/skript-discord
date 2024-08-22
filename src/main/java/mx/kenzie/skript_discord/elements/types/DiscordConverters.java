@@ -15,8 +15,10 @@ import org.skriptlang.skript.lang.converter.Converters;
 public class DiscordConverters {
 
     static {
-        Converters.registerConverter(Channel.class, CommandSender.class, ChannelCommandSender::new, Converter.NO_RIGHT_CHAINING);
-        Converters.registerConverter(User.class, CommandSender.class, UserCommandSender::new, Converter.NO_RIGHT_CHAINING);
+        Converters.registerConverter(Channel.class, CommandSender.class, ChannelCommandSender::new,
+            Converter.NO_RIGHT_CHAINING);
+        Converters.registerConverter(User.class, CommandSender.class, UserCommandSender::new,
+            Converter.NO_RIGHT_CHAINING);
         Converters.registerConverter(Member.class, User.class, member -> member.user, Converter.NO_RIGHT_CHAINING);
         Converters.registerConverter(Bot.class, DiscordAPI.class, Bot::getAPI, Converter.NO_RIGHT_CHAINING);
         Converters.registerConverter(Entity.class, DiscordAPI.class, entity -> entity.api, Converter.NO_RIGHT_CHAINING);

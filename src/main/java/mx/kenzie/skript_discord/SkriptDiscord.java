@@ -3,8 +3,8 @@ package mx.kenzie.skript_discord;
 import ch.njol.skript.Skript;
 import ch.njol.skript.SkriptAddon;
 import ch.njol.skript.util.Version;
-import mx.kenzie.clockwork.io.IOQueue;
 import mx.kenzie.eris.Bot;
+import mx.kenzie.eris.DiscordAPI;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -12,11 +12,13 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class SkriptDiscord extends JavaPlugin {
 
     private static SkriptDiscord instance;
-    private static IOQueue queue;
+    private static ExecutorService service;
     private static List<Bot> bots;
     private SkriptAddon addon;
 
@@ -24,7 +26,7 @@ public class SkriptDiscord extends JavaPlugin {
     public void onEnable() {
         super.onEnable();
         SkriptDiscord.instance = this;
-        SkriptDiscord.queue = new IOQueue(1000);
+        SkriptDiscord.service = Executors.newVirtualThreadPerTaskExecutor();
         SkriptDiscord.bots = new ArrayList<>(4);
 
         final PluginManager manager = this.getServer().getPluginManager();
@@ -62,18 +64,14 @@ public class SkriptDiscord extends JavaPlugin {
         super.onDisable();
         for (Bot bot : SkriptDiscord.bots)
             if (bot.isRunning()) bot.close();
-        if (queue != null) SkriptDiscord.queue.shutdown(1);
-        SkriptDiscord.queue = null;
+        if (service != null) service.close();
+        SkriptDiscord.service = null;
         SkriptDiscord.instance = null;
         SkriptDiscord.bots = null;
     }
 
     public static SkriptDiscord instance() {
         return instance;
-    }
-
-    public static IOQueue queue() {
-        return queue;
     }
 
     public static void registerBot(Bot bot) {
@@ -88,6 +86,15 @@ public class SkriptDiscord extends JavaPlugin {
     public static void error(Throwable throwable) {
         if (throwable == null) return;
         throwable.printStackTrace();
+    }
+
+    public static DiscordAPI getUnaryApiInstance() {
+        if (bots.size() == 1) return bots.getFirst().getAPI();
+        return null;
+    }
+
+    public static ExecutorService executor() {
+        return service;
     }
 
 }

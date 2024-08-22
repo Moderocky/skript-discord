@@ -40,7 +40,7 @@ public class EffLink extends Effect {
 
     static {
         Skript.registerEffect(EffLink.class,
-            "link %discordentities% (to|with) %discordapi%"
+            "link %discordentities% (to|with) %discord%"
         );
     }
 

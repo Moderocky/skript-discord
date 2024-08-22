@@ -76,11 +76,8 @@ public class EffWait extends Effect {
         // Back up local variables
         final Object locals = Variables.removeLocals(event);
 
-        if (Bukkit.isPrimaryThread()) SkriptDiscord.queue().queue(new DataTask() {
-            @Override
-            public void execute() {
-                EffWait.this.await(lazy, duration, event, locals, next, start);
-            }
+        if (Bukkit.isPrimaryThread()) SkriptDiscord.executor().submit(() -> {
+            EffWait.this.await(lazy, duration, event, locals, next, start);
         });
         else this.await(lazy, duration, event, locals, next, start);
         return null;
