@@ -34,6 +34,7 @@ public class ExprGuild extends AbstractExprEntity<Guild> {
 
     @Override
     protected Guild get(Event event, @NotNull Object id, DiscordAPI api) {
+        if (id instanceof Number number) return api.getGuild(number.longValue());
         return api.getGuild(api.getGuildId(id));
     }
 

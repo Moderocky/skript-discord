@@ -36,6 +36,7 @@ public class ExprChannel extends AbstractExprEntity<Channel> {
 
     @Override
     protected Channel get(Event event, @NotNull Object id, DiscordAPI api) {
+        if (id instanceof Number number) return api.getChannel(number.longValue());
         return api.getChannel(String.valueOf(id));
     }
 
