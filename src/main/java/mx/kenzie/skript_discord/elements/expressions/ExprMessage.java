@@ -34,10 +34,10 @@ import java.util.List;
         send {message} to {channel}"""
 })
 @Since("1.0.0")
-public class ExprNewMessage extends SimpleExpression<Message> implements ContextualElement {
+public class ExprMessage extends SimpleExpression<Message> implements ContextualElement {
 
     static {
-        Skript.registerExpression(ExprNewMessage.class, Message.class, ExpressionType.SIMPLE,
+        Skript.registerExpression(ExprMessage.class, Message.class, ExpressionType.SIMPLE,
             "[a] new [discord] message [flags:with flags %-messageflags%]",
             "[a] new [discord] message %string% [flags:with flags %-messageflags%]",
             "[a] new [discord] message with content[s] %objects% [flags:(with|and) flags %-messageflags%]"

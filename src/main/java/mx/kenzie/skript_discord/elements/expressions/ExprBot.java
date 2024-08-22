@@ -27,10 +27,10 @@ import org.bukkit.event.Event;
         wait for {bot} # wait until the login completes"""
 })
 @Since("1.0.0")
-public class ExprNewBot extends SimpleExpression<Bot> {
+public class ExprBot extends SimpleExpression<Bot> {
 
     static {
-        Skript.registerExpression(ExprNewBot.class, Bot.class, ExpressionType.SIMPLE,
+        Skript.registerExpression(ExprBot.class, Bot.class, ExpressionType.SIMPLE,
             "[a] new [discord] bot with token %string%",
             "[a] new [discord] bot with token %string% and intents [for] %gatewayintents%");
     }

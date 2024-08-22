@@ -20,10 +20,10 @@ import mx.kenzie.skript_discord.elements.ContextualElement;
         send "hello, %{user}'s username%" to {user}""",
 })
 @Since("1.0.0")
-public class ExprUsername extends SimplePropertyExpression<User, String> implements ContextualElement {
+public class ExprUserUsername extends SimplePropertyExpression<User, String> implements ContextualElement {
 
     static {
-        register(ExprUsername.class, String.class, "user[ ]name", "user");
+        register(ExprUserUsername.class, String.class, "user[ ]name", "user");
     }
 
     @Override

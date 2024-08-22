@@ -20,10 +20,10 @@ import org.bukkit.event.Event;
         log in to {bot}""",
 })
 @Since("1.0.0")
-public class ExprToken extends SimplePropertyExpression<Bot, String> implements ContextualElement {
+public class ExprBotToken extends SimplePropertyExpression<Bot, String> implements ContextualElement {
 
     static {
-        register(ExprToken.class, String.class, "token", "bot");
+        register(ExprBotToken.class, String.class, "token", "bot");
     }
 
     @Override

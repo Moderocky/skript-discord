@@ -19,10 +19,10 @@ import mx.kenzie.skript_discord.elements.ContextualElement;
         set {id} the discord id of {user}""",
 })
 @Since("1.0.0")
-public class ExprID extends SimplePropertyExpression<Snowflake, Long> implements ContextualElement {
+public class ExprEntityID extends SimplePropertyExpression<Snowflake, Long> implements ContextualElement {
 
     static {
-        register(ExprID.class, Long.class, "[discord] id", "snowflake");
+        register(ExprEntityID.class, Long.class, "[discord] id", "snowflake");
     }
 
     @Override

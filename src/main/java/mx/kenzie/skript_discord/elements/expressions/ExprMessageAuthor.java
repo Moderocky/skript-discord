@@ -21,10 +21,10 @@ import mx.kenzie.skript_discord.elements.ContextualElement;
 @Examples({
 })
 @Since("1.0.0")
-public class ExprAuthor extends SimplePropertyExpression<Message, User> implements ContextualElement {
+public class ExprMessageAuthor extends SimplePropertyExpression<Message, User> implements ContextualElement {
 
     static {
-        register(ExprAuthor.class, User.class, "author", "message");
+        register(ExprMessageAuthor.class, User.class, "author", "message");
     }
 
     @Override

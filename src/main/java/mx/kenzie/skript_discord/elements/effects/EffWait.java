@@ -31,7 +31,12 @@ import org.bukkit.event.Event;
     A lazy object can be waited for indefinitely, in which case this will *only* continue when the data is marked as completed.
     As a request may hang forever (e.g. if the wifi is switched off) users may wish to provide a maximum wait time.
     """)
-@Examples({ // todo
+@Examples({
+    """
+        set {user} to user with id {@my id} using {bot}
+        wait 5 seconds for {user}
+        if {user} is ready:
+            send "hello " + username of {user} to {user}"""
 })
 @Since("1.0.0")
 public class EffWait extends Effect {

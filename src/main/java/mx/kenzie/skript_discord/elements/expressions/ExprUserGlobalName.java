@@ -24,10 +24,10 @@ import mx.kenzie.skript_discord.elements.ContextualElement;
         send "hello, %{user}'s nickname%" to {user}""",
 })
 @Since("1.0.0")
-public class ExprGlobalName extends SimplePropertyExpression<Entity, String> implements ContextualElement {
+public class ExprUserGlobalName extends SimplePropertyExpression<Entity, String> implements ContextualElement {
 
     static {
-        register(ExprGlobalName.class, String.class, "(nick[ ]name|global [display] name)", "member/user");
+        register(ExprUserGlobalName.class, String.class, "(nick[ ]name|global [display] name)", "member/user");
     }
 
     @Override
