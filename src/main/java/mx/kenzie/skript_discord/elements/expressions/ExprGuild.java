@@ -5,14 +5,9 @@ import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
-import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
-import ch.njol.skript.lang.SkriptParser;
-import ch.njol.skript.lang.util.SimpleExpression;
-import ch.njol.util.Kleenean;
 import mx.kenzie.eris.DiscordAPI;
 import mx.kenzie.eris.api.entity.Guild;
-import mx.kenzie.skript_discord.elements.ContextualElement;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 
@@ -27,8 +22,7 @@ import org.jetbrains.annotations.NotNull;
         set {bot} to a new bot with token {token}
         log in to {bot}
         wait for {bot} # wait until the login completes
-        set {guild} to the guild with id "988998880794402856" using {bot}
-        """
+        set {guild} to the guild with id "988998880794402856" using {bot}"""
 })
 @Since("1.0.0")
 public class ExprGuild extends AbstractExprEntity<Guild> {

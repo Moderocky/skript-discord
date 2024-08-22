@@ -12,7 +12,8 @@ public enum MessageFlag implements Intents {
     HAS_THREAD(1 << 5), // this message has an associated thread, with the same id as the message
     EPHEMERAL(1 << 6), // this message is only visible to the user who invoked the Interaction
     LOADING(1 << 7), // this message is an Interaction Response and the bot is "thinking"
-    FAILED_TO_MENTION_SOME_ROLES_IN_THREAD(1 << 8), // this message failed to mention some roles and add their members to the thread
+    FAILED_TO_MENTION_SOME_ROLES_IN_THREAD(1 << 8), // this message failed to mention some roles and add their
+    // members to the thread
     SUPPRESS_NOTIFICATIONS(1 << 12), // this message will not trigger push and desktop notifications
     IS_VOICE_MESSAGE(1 << 13); // this message is a voice message
 
@@ -20,10 +21,6 @@ public enum MessageFlag implements Intents {
 
     MessageFlag(int magic) {
         this.magic = magic;
-    }
-
-    public int magic() {
-        return magic;
     }
 
     public static int combine(MessageFlag... flags) {
@@ -36,6 +33,10 @@ public enum MessageFlag implements Intents {
         for (MessageFlag value : MessageFlag.values()) {
             System.out.println(value.name().toLowerCase() + ": " + value.name().toLowerCase().replace('_', ' '));
         }
+    }
+
+    public int magic() {
+        return magic;
     }
 
 }

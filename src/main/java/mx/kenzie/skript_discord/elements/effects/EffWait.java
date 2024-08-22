@@ -15,13 +15,10 @@ import ch.njol.skript.timings.SkriptTimings;
 import ch.njol.skript.util.Timespan;
 import ch.njol.skript.variables.Variables;
 import ch.njol.util.Kleenean;
-import mx.kenzie.clockwork.io.DataTask;
 import mx.kenzie.eris.api.Lazy;
 import mx.kenzie.skript_discord.SkriptDiscord;
 import org.bukkit.Bukkit;
 import org.bukkit.event.Event;
-
-import java.io.IOException;
 
 @Name("Wait for Result (Delay)")
 @Description("""

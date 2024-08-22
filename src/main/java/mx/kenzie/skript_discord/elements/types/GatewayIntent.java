@@ -30,14 +30,14 @@ public enum GatewayIntent implements Intents {
         this.magic = magic;
     }
 
-    public int magic() {
-        return magic;
-    }
-
     public static void main(String[] args) {
         for (GatewayIntent value : GatewayIntent.values()) {
             System.out.println(value.name().toLowerCase() + ": " + value.name().toLowerCase().replace('_', ' '));
         }
+    }
+
+    public int magic() {
+        return magic;
     }
 
 }
