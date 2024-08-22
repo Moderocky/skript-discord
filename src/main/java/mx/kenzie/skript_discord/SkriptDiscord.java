@@ -2,11 +2,6 @@ package mx.kenzie.skript_discord;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.SkriptAddon;
-import ch.njol.skript.effects.EffMessage;
-import ch.njol.skript.lang.Effect;
-import ch.njol.skript.lang.Statement;
-import ch.njol.skript.lang.SyntaxElement;
-import ch.njol.skript.lang.SyntaxElementInfo;
 import ch.njol.skript.util.Version;
 import mx.kenzie.clockwork.io.IOQueue;
 import mx.kenzie.eris.Bot;
@@ -15,7 +10,8 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class SkriptDiscord extends JavaPlugin {
 
@@ -50,17 +46,14 @@ public class SkriptDiscord extends JavaPlugin {
             return;
         }
 
-        Collection<SyntaxElementInfo<?>> infos = this.removeEffects(EffMessage.class);
         try {
             this.addon = Skript.registerAddon(this);
             this.addon.setLanguageFileDirectory("lang");
-            this.addon.loadClasses("org.skriptlang.skript_io.elements");
+            this.addon.loadClasses("mx.kenzie.skript_discord.elements");
         } catch (IOException e) {
             this.getLogger().severe("An error occurred while trying to enable this addon.");
             e.printStackTrace();
             manager.disablePlugin(this);
-        } finally {
-            this.addEffects(infos);
         }
     }
 
@@ -90,35 +83,6 @@ public class SkriptDiscord extends JavaPlugin {
     public static void unregisterBot(Bot bot) {
         SkriptDiscord.bots.remove(bot);
         if (bot.isRunning()) bot.close();
-    }
-
-    private Collection<SyntaxElementInfo<?>> removeEffects(Class<? extends SyntaxElement>... types) {
-        //<editor-fold desc="Remove Skript's copy of syntax" defaultstate="collapsed">
-        Collection<SyntaxElementInfo<? extends Effect>> effects = Skript.getEffects();
-        Collection<SyntaxElementInfo<? extends Statement>> statements = Skript.getStatements();
-        Set<SyntaxElementInfo<?>> set = new HashSet<>();
-        final Iterator<SyntaxElementInfo<? extends Effect>> iterator = effects.iterator();
-        loop:
-        while (iterator.hasNext()) {
-            final SyntaxElementInfo<?> next = iterator.next();
-            for (Class<? extends SyntaxElement> type : types) {
-                if (next.elementClass != type) continue;
-                set.add(next);
-                iterator.remove();
-                statements.remove(next);
-                continue loop;
-            }
-        }
-        return set;
-        //</editor-fold>
-    }
-
-    @SuppressWarnings("unchecked")
-    private void addEffects(Collection<SyntaxElementInfo<?>> effects) {
-        //<editor-fold desc="Re-add Skript syntax" defaultstate="collapsed">
-        Skript.getEffects().addAll((Collection<? extends SyntaxElementInfo<? extends Effect>>) effects);
-        Skript.getStatements().addAll((Collection<? extends SyntaxElementInfo<? extends Statement>>) effects);
-        //</editor-fold>
     }
 
 }

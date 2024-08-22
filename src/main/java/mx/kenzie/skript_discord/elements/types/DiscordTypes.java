@@ -2,12 +2,19 @@ package mx.kenzie.skript_discord.elements.types;
 
 import ch.njol.skript.classes.ClassInfo;
 import ch.njol.skript.classes.EnumClassInfo;
+import ch.njol.skript.classes.Parser;
+import ch.njol.skript.classes.Serializer;
 import ch.njol.skript.registrations.Classes;
+import ch.njol.yggdrasil.Fields;
+import mx.kenzie.argo.Json;
 import mx.kenzie.eris.Bot;
 import mx.kenzie.eris.DiscordAPI;
 import mx.kenzie.eris.api.Lazy;
 import mx.kenzie.eris.api.entity.*;
 import mx.kenzie.eris.data.Payload;
+
+import java.io.NotSerializableException;
+import java.io.StreamCorruptedException;
 
 public class DiscordTypes {
 
@@ -17,6 +24,62 @@ public class DiscordTypes {
             .name("Bot")
             .description("A Discord bot.")
             .since("1.0.0")
+            //<editor-fold desc="String stuff" defaultstate="collapsed">
+            .parser(new Parser<>() {
+
+                @Override
+                public String toString(Bot bot, int flags) {
+                    return bot.toString();
+                }
+
+                @Override
+                public String toVariableNameString(Bot bot) {
+                    return "bot:" + bot.toString();
+                }
+            })
+            .serializer(new Serializer<>() {
+                @Override
+                public Fields serialize(Bot bot) throws NotSerializableException {
+                    Fields fields = new Fields();
+                    fields.putObject("token", bot.token());
+                    fields.putObject("secret", bot.secret());
+                    fields.putPrimitive("intents", bot.intents());
+                    return fields;
+                }
+
+                @Override
+                protected Bot deserialize(Fields fields) throws StreamCorruptedException, NotSerializableException {
+                    final String token, secret;
+                    final int intents;
+                    token = fields.getObject("token", String.class);
+                    secret = fields.getObject("secret", String.class);
+                    intents = fields.getPrimitive("intents", int.class);
+                    return new Bot(token, secret, intents);
+                }
+
+                @Override
+                public void deserialize(Bot bot, Fields fields)
+                    throws StreamCorruptedException {
+                    final String token, secret;
+                    final int intents;
+                    token = fields.getObject("token", String.class);
+                    secret = fields.getObject("secret", String.class);
+                    intents = fields.getPrimitive("intents", int.class);
+                    bot.setToken(token);
+                    bot.setSecret(secret);
+                    bot.setIntents(intents);
+                }
+
+                @Override
+                public boolean mustSyncDeserialization() {
+                    return false;
+                }
+
+                @Override
+                protected boolean canBeInstantiated() {
+                    return false;
+                }
+            })//</editor-fold>
         );
         Classes.registerClass(new ClassInfo<>(DiscordAPI.class, "discordapi")
             .user("discord apis?")
@@ -29,6 +92,46 @@ public class DiscordTypes {
             .name("Payload")
             .description("A data object that can be sent to/received from Discord.")
             .since("1.0.0")
+            //<editor-fold desc="String stuff" defaultstate="collapsed">
+            .serializer(new Serializer<>() {
+
+                @Override
+                public Fields serialize(Payload payload) throws NotSerializableException {
+                    final Fields fields = new Fields();
+                    fields.putObject("__type", payload.getClass());
+                    fields.putObject("__data", payload.toJson(null));
+                    return fields;
+                }
+
+                @Override
+                protected Payload deserialize(Fields fields)
+                    throws StreamCorruptedException, NotSerializableException {
+                    final Class<?> type = fields.getObject("__type", Class.class);
+                    final String json = fields.getObject("__data", String.class);
+                    if (type == null || json == null) return super.deserialize(fields);
+                    return (Payload) Json.fromJson(json, type);
+                }
+
+                @Override
+                public void deserialize(Payload payload, Fields fields)
+                    throws StreamCorruptedException, NotSerializableException {
+                    final Class<?> type = fields.getObject("__type", Class.class);
+                    final String json = fields.getObject("__data", String.class);
+                    if (json == null) return;
+                    Json.fromJson(json, payload);
+                }
+
+                @Override
+                public boolean mustSyncDeserialization() {
+                    return false;
+                }
+
+                @Override
+                protected boolean canBeInstantiated() {
+                    return false;
+                }
+            })
+            //</editor-fold>
         );
         Classes.registerClass(new ClassInfo<>(Entity.class, "discordentity")
             .user("discord entit(y|ies)")
