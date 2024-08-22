@@ -8,7 +8,6 @@ import mx.kenzie.eris.DiscordAPI;
 import mx.kenzie.eris.api.Lazy;
 import mx.kenzie.eris.api.entity.*;
 import mx.kenzie.eris.data.Payload;
-import org.bukkit.boss.BarFlag;
 
 public class DiscordTypes {
 
@@ -57,7 +56,6 @@ public class DiscordTypes {
             .description("A Discord user.")
             .since("1.0.0")
         );
-
         Classes.registerClass(new ClassInfo<>(Member.class, "member")
             .user("members?")
             .name("Member")
@@ -67,7 +65,6 @@ public class DiscordTypes {
                 Member objects are not transferable between servers (e.g. user X's membership in server A is different from user X's membership in server B).""")
             .since("1.0.0")
         );
-
         Classes.registerClass(new ClassInfo<>(Self.class, "self")
             .user("sel(f|ves)")
             .name("Self")
@@ -77,7 +74,7 @@ public class DiscordTypes {
             .since("1.0.0")
         );
 
-        Classes.registerClass(new EnumClassInfo<>(BarFlag.class, "gatewayintent", "gateway intents")
+        Classes.registerClass(new EnumClassInfo<>(GatewayIntent.class, "gatewayintent", "gateway intents")
             .user("(gateway|login) intents?")
             .name("Gateway Intents")
             .description("""
