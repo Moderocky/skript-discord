@@ -61,15 +61,17 @@ public class ExprMessage extends SimpleExpression<Message> implements Contextual
         final DiscordAPI available = this.getApi(event, null);
         final Message message = new Message();
         final List<Embed> embeds = new ArrayList<>();
-        for (Object object : contentsExpression.getArray(event)) {
-            switch (object) {
-                case Embed embed -> embeds.add(embed);
-                case Attachment attachment -> throw new UnsupportedOperationException();
-                default -> message.content = Classes.toString(object, StringMode.MESSAGE);
+        if (contentsExpression != null) {
+            for (Object object : contentsExpression.getArray(event)) {
+                switch (object) {
+                    case Embed embed -> embeds.add(embed);
+                    case Attachment attachment -> throw new UnsupportedOperationException();
+                    default -> message.content = Classes.toString(object, StringMode.MESSAGE);
+                }
             }
+            if (!embeds.isEmpty()) message.embeds = embeds.toArray(new Embed[0]);
+            if (available != null) message.api = available;
         }
-        if (!embeds.isEmpty()) message.embeds = embeds.toArray(new Embed[0]);
-        if (available != null) message.api = available;
         if (flagsExpression != null) {
             final MessageFlag[] array = flagsExpression.getArray(event);
             message.flags = MessageFlag.combine(array);
