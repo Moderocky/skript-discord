@@ -109,6 +109,7 @@ public class DiscordTypes {
                 set {server} to the discord server with id "988998880794402856" using {bot}""")
             .since("1.0.0")
         );
+
         Classes.registerClass(new ClassInfo<>(Payload.class, "payload")
                 .user("payloads?")
                 .name("Payload")
@@ -274,20 +275,11 @@ public class DiscordTypes {
             .since("1.0.0")
         );
 
-        // basic things
+        // user things
         Classes.registerClass(new ClassInfo<>(User.class, "user")
             .user("users?")
             .name("User")
             .description("A Discord user.")
-            .since("1.0.0")
-        );
-        Classes.registerClass(new ClassInfo<>(Member.class, "member")
-            .user("members?")
-            .name("Member")
-            .description("""
-                A Discord member in a server.
-                Members are linked to a particular server.
-                Member objects are not transferable between servers (e.g. user X's membership in server A is different from user X's membership in server B).""")
             .since("1.0.0")
         );
         Classes.registerClass(new ClassInfo<>(Self.class, "self")
@@ -299,6 +291,7 @@ public class DiscordTypes {
             .since("1.0.0")
         );
 
+        // login things
         Classes.registerClass(new EnumClassInfo<>(GatewayIntent.class, "gatewayintent", "gateway intents")
             .user("(gateway|login) intents?")
             .name("Gateway Intents")
@@ -306,6 +299,23 @@ public class DiscordTypes {
                 The things your bot intends to interact with after logging in.
                 If a gateway intent is not requested, some functionality may be unavailable.
                 Some gateway intents are "privileged" (and require configuration in the Discord portal to access).""")
+            .since("1.0.0")
+        );
+
+        // guild things
+        Classes.registerClass(new ClassInfo<>(Guild.class, "guild")
+            .user("guilds?")
+            .name("Guild")
+            .description("A Discord server/guild.")
+            .since("1.0.0")
+        );
+        Classes.registerClass(new ClassInfo<>(Member.class, "member")
+            .user("members?")
+            .name("Member")
+            .description("""
+                A Discord member in a server.
+                Members are linked to a particular server.
+                Member objects are not transferable between servers (e.g. user X's membership in server A is different from user X's membership in server B).""")
             .since("1.0.0")
         );
 

@@ -40,9 +40,9 @@ public class ExprGuildProperties extends SimplePropertyExpression<Guild, String>
 
     static {
         providers.put("description", guild -> guild.description);
-        providers.put("banner", guild -> guild.banner);
+        providers.put("banner", guild -> "https://cdn.discordapp.com/banners/" + guild.id + "/" + guild.banner + ".png");
         providers.put("name", guild -> guild.name);
-        providers.put("icon", guild -> guild.icon);
+        providers.put("icon", guild -> "https://cdn.discordapp.com/icons/" + guild.id + "/" + guild.icon + ".png");
         providers.put("icon hash", guild -> guild.icon_hash);
         providers.put("region", guild -> guild.region);
         providers.put("splash", guild -> guild.splash);
