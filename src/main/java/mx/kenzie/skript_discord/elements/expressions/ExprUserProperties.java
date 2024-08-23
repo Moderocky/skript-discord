@@ -22,12 +22,12 @@ import mx.kenzie.skript_discord.elements.ContextualElement;
         set {url} to {user}'s avatar link""",
 })
 @Since("1.0.0")
-public class ExprUserURL extends SimplePropertyExpression<User, String> implements ContextualElement {
+public class ExprUserProperties extends SimplePropertyExpression<User, String> implements ContextualElement {
 
     private static final int BANNER = 1, AVATAR = 2;
 
     static {
-        register(ExprUserURL.class, String.class, "(:banner|:avatar) (link|url)", "user");
+        register(ExprUserProperties.class, String.class, "(:banner|:avatar) (link|url)", "user");
     }
 
     protected int mode;
