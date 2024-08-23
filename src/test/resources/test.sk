@@ -1,0 +1,31 @@
+
+on load:
+    set {bot} to a new bot with token {token} and intents for guilds, guild messages and message content
+
+    log in to {bot}
+    broadcast "Logging in"
+    wait 10 seconds for {bot}
+    broadcast "Waited"
+    if {bot} is ready:
+        broadcast "Ready"
+    if {bot} was successful:
+        broadcast "Successful"
+    else:
+        report the error from {bot}
+
+    broadcast "Getting channel"
+    set {_channel} to channel with id "399248280854200331" using {bot}
+
+    set {_message} to a new message "hello there"
+    broadcast "Sending message"
+
+    send {_message} to {_channel}
+    wait 10 seconds for {_message}
+    broadcast "Waited"
+    if {_message} is ready:
+        broadcast "Ready"
+    if {_message} was successful:
+        broadcast "Successful"
+    else:
+        report the error from {_message}
+    broadcast "End"
