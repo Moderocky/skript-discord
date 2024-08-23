@@ -30,6 +30,8 @@ import java.util.function.Function;
 @Examples({
     """
         broadcast {guild}'s description""",
+    """
+        broadcast {guild}'s icon""",
 })
 @Since("1.0.0")
 public class ExprGuildProperties extends SimplePropertyExpression<Guild, String> implements ContextualElement {
