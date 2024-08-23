@@ -5,7 +5,6 @@ import ch.njol.skript.lang.ParseContext;
 import ch.njol.skript.registrations.Classes;
 import ch.njol.skript.util.StringMode;
 import ch.njol.yggdrasil.Fields;
-import mx.kenzie.argo.Json;
 import mx.kenzie.eris.Bot;
 import mx.kenzie.eris.DiscordAPI;
 import mx.kenzie.eris.api.Lazy;
@@ -111,55 +110,18 @@ public class DiscordTypes {
         );
 
         Classes.registerClass(new ClassInfo<>(Payload.class, "payload")
-                .user("payloads?")
-                .name("Payload")
-                .description("A data object that can be sent to/received from Discord.")
-                .since("1.0.0")
-                //<editor-fold desc="String stuff" defaultstate="collapsed">
-                .serializer(new Serializer<>() {
-
-                    @Override
-                    public Fields serialize(Payload payload) throws NotSerializableException {
-                        final Fields fields = new Fields();
-                        fields.putObject("__type", payload.getClass());
-                        fields.putObject("__data", payload.toJson(null));
-                        return fields;
-                    }
-
-                    @Override
-                    protected Payload deserialize(Fields fields)
-                        throws StreamCorruptedException, NotSerializableException {
-                        final Class<?> type = fields.getObject("__type", Class.class);
-                        final String json = fields.getObject("__data", String.class);
-                        if (type == null || json == null) return super.deserialize(fields);
-                        return (Payload) Json.fromJson(json, type);
-                    }
-
-                    @Override
-                    public void deserialize(Payload payload, Fields fields)
-                        throws StreamCorruptedException, NotSerializableException {
-                        final String json = fields.getObject("__data", String.class);
-                        if (json == null) return;
-                        Json.fromJson(json, payload);
-                    }
-
-                    @Override
-                    public boolean mustSyncDeserialization() {
-                        return false;
-                    }
-
-                    @Override
-                    protected boolean canBeInstantiated() {
-                        return false;
-                    }
-                })
-            //</editor-fold>
+            .user("payloads?")
+            .name("Payload")
+            .description("A data object that can be sent to/received from Discord.")
+            .since("1.0.0")
+            .serializer(new PayloadSerializer<>())
         );
         Classes.registerClass(new ClassInfo<>(Entity.class, "discordentity")
             .user("discord entit(y|ies)")
             .name("Entity")
             .description("A Discord entity (thing) e.g. a message, user, channel, role, server.")
             .since("1.0.0")
+            .serializer(new PayloadSerializer<>())
         );
         Classes.registerClass(new ClassInfo<>(Lazy.class, "lazy")
             .user("laz(y|ies)")
@@ -172,6 +134,7 @@ public class DiscordTypes {
             .name("Snowflake")
             .description("A Discord entity with a numeric ID, e.g. a user, a channel, a message.")
             .since("1.0.0")
+            .serializer(new SnowflakeSerializer<>())
         );
 
         // channel things
@@ -180,6 +143,7 @@ public class DiscordTypes {
             .name("Channel")
             .description("A Discord channel (almost always in a server).")
             .since("1.0.0")
+            .serializer(new SnowflakeSerializer<>())
             .changer(new Changer<>() {
                 @Override
                 public Class<?>[] acceptChange(ChangeMode mode) {
@@ -220,6 +184,7 @@ public class DiscordTypes {
             .description("""
                 Represents a Discord message, either created to be sent, or a message having been received.""")
             .since("1.0.0")
+            .serializer(new SnowflakeSerializer<>())
             .changer(new Changer<>() {
                 @Override
                 public Class<?>[] acceptChange(ChangeMode mode) {
@@ -264,6 +229,7 @@ public class DiscordTypes {
             .name("Embed")
             .description("Embedded content in a Discord message.")
             .since("1.0.0")
+            .serializer(new PayloadSerializer<>())
         );
 
         Classes.registerClass(new EnumClassInfo<>(MessageFlag.class, "messageflag", "message flags")
@@ -281,6 +247,7 @@ public class DiscordTypes {
             .name("User")
             .description("A Discord user.")
             .since("1.0.0")
+            .serializer(new SnowflakeSerializer<>())
         );
         Classes.registerClass(new ClassInfo<>(Self.class, "self")
             .user("sel(f|ves)")
@@ -289,6 +256,7 @@ public class DiscordTypes {
                 A bot's user account, containing some extra information.
                 This may also represent a user account which has given access to the application.""")
             .since("1.0.0")
+            .serializer(new SnowflakeSerializer<>())
         );
 
         // login things
@@ -308,6 +276,7 @@ public class DiscordTypes {
             .name("Guild")
             .description("A Discord server/guild.")
             .since("1.0.0")
+            .serializer(new SnowflakeSerializer<>())
         );
         Classes.registerClass(new ClassInfo<>(Member.class, "member")
             .user("members?")
@@ -317,6 +286,7 @@ public class DiscordTypes {
                 Members are linked to a particular server.
                 Member objects are not transferable between servers (e.g. user X's membership in server A is different from user X's membership in server B).""")
             .since("1.0.0")
+            .serializer(new PayloadSerializer<>())
         );
 
     }
