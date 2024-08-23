@@ -11,6 +11,7 @@ import ch.njol.skript.util.StringMode;
 import mx.kenzie.eris.api.entity.Message;
 import mx.kenzie.skript_discord.elements.ContextualElement;
 import org.bukkit.event.Event;
+import org.jetbrains.annotations.Nullable;
 
 @Name("Content of Message")
 @Description("""
@@ -54,7 +55,7 @@ public class ExprMessageContent extends SimplePropertyExpression<Message, String
     }
 
     @Override
-    public void change(Event event, Object[] delta, Changer.ChangeMode mode) {
+    public void change(Event event, Object @Nullable [] delta, Changer.ChangeMode mode) {
         for (Message message : this.getExpr().getArray(event)) {
             switch (mode) {
                 case SET -> {

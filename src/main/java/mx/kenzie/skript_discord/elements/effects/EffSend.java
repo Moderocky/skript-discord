@@ -69,8 +69,7 @@ public class EffSend extends Effect implements ContextualElement {
         final Message message;
         if (payload instanceof Message thing) message = thing;
         else message = new Message(Classes.toString(payload, StringMode.MESSAGE));
-        final DiscordAPI api = this.getApi(event, contextExpression, target, message);
-        if (target.api == null) target.api = api;
+        if (target.api == null) target.api = this.getApi(event, contextExpression, target, message);
         switch (target) {
             case User user -> user.sendMessage(message);
             case Channel channel -> channel.send(message);
